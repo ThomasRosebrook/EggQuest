@@ -11,7 +11,7 @@ namespace EggQuest.Collisions
     /// <summary>
     /// A bounding rectangle for collision detection
     /// </summary>
-    public struct  BoundingRectangle
+    public struct  BoundingRectangle : IBoundingShape
     {
         public float X;
         public float Y;
@@ -36,14 +36,24 @@ namespace EggQuest.Collisions
             Width = width;
             Height = height;
         }
+
+        public bool CollidesWith(IBoundingShape other)
+        {
+            if (other is BoundingRectangle rect) return CollisionHelper.Collides(this, rect);
+            if (other is BoundingCircle circle) return CollisionHelper.Collides(circle, this);
+            if (other is BoundingOval oval) return CollisionHelper.Collides(oval, this);
+
+            return false;
+        }
+
         /// <summary>
-        /// teses a collsion between this and anohter bounding circle
+        /// tests a collision between this and another bounding circle
         /// </summary>
         /// <param name="other">the other bounding circle</param>
         /// <returns>true for collision, false otherwise</returns>
         public bool CollidesWith(BoundingRectangle other)
         {
-            return CollisisionHelper.Collides(this, other);
+            return CollisionHelper.Collides(this, other);
         }
         /// <summary>
         /// teses a collsion between this and anohter bounding circle
@@ -52,7 +62,7 @@ namespace EggQuest.Collisions
         /// <returns>true for collision, false otherwise</returns>
         public bool CollidesWith(BoundingCircle other)
         {
-            return CollisisionHelper.Collides(other, this);
+            return CollisionHelper.Collides(other, this);
         }
         /// <summary>
         /// teses a collsion between this and a bounding Oval
@@ -61,7 +71,29 @@ namespace EggQuest.Collisions
         /// <returns>true for collision, false otherwise</returns>
         public bool CollidesWith(BoundingOval other)
         {
-            return CollisisionHelper.Collides(other, this);
+            return CollisionHelper.Collides(other, this);
+        }
+
+        public float GetHeight() => Height;
+
+        public Vector2 GetPosition() => new Vector2(X,Y);
+
+        public float GetWidth() => Width;
+
+        public void SetHeight(float height)
+        {
+            Height = height;
+        }
+
+        public void SetPosition(Vector2 position)
+        {
+            X = position.X;
+            Y = position.Y;
+        }
+
+        public void SetWidth(float width)
+        {
+            Width = width;
         }
     }
 }

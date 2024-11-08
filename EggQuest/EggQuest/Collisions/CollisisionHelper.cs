@@ -8,7 +8,7 @@ using EggQuest.Collisions;
 
 namespace EggQuest.Collisions
 {
-    public static class CollisisionHelper
+    public static class CollisionHelper
     {
         /// <summary>
         /// Detects collision between two BoundingCircles.

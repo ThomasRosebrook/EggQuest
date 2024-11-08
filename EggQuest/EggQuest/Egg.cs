@@ -8,27 +8,12 @@ using System.Windows.Forms;
 
 namespace EggQuest
 {
-    public class Egg
+    public class Egg : Object2D
     {
-        /// <summary>
-        /// Position of the egg
-        /// </summary>
-        public Vector2 Position;
-
-        /// <summary>
-        /// Image for the egg
-        /// </summary>
-        public Texture2D Texture;
-
         /// <summary>
         /// image for projectile
         /// </summary>
         public Texture2D PTexture;
-
-        /// <summary>
-        /// Velocity of the egg
-        /// </summary>
-        public Vector2 Velocity;
 
         /// <summary>
         /// Center of the egg for drawing
@@ -37,44 +22,42 @@ namespace EggQuest
 
         private const int SpawnInterval = 1000;
         private double timeSinceLastShot;
-        private int eggWidth;
-        private int eggHeight;
 
         public List<Projectile> Projectiles = new List<Projectile>();
 
         public BoundingOval Hitbox;
 
-        public Egg()
+        public Egg() : base(new BoundingOval())
         {
             Position = new Vector2(100, 100); // Where the egg spawns
             Velocity = new Vector2(2, 2); // Initial speed and direction of the egg
             timeSinceLastShot = 0;
         }
 
-        public void LoadContent(ContentManager content)
+        public override void LoadContent(ContentManager content)
         {
             Texture = content.Load<Texture2D>("MissingTexture");
             PTexture = content.Load<Texture2D>("MissingTexture");
-            eggWidth = Texture.Width;
-            eggHeight = Texture.Height;
-            Origin = new Vector2(eggWidth / 2, eggHeight / 2); // Center of the egg
-            Vector2 eggCenter = new Vector2(Position.X + eggWidth / 2, Position.Y + eggHeight / 2); //center of the egg for rotating stuff to make an oval
+            Width = Texture.Width;
+            Height = Texture.Height;
+            Origin = new Vector2(Width / 2, Height / 2); // Center of the egg
+            Vector2 eggCenter = new Vector2(Position.X + Width / 2, Position.Y + Height / 2); //center of the egg for rotating stuff to make an oval
 
-            Hitbox = new BoundingOval(eggCenter, eggWidth / 2, eggHeight / 2);
+            Hitbox = new BoundingOval(eggCenter, Width / 2, Height / 2);
         }
 
         public void Update(GameTime gameTime, int screenWidth, int screenHeight)
         {
             Position += Velocity;
-            Hitbox.Center = new Vector2(Position.X + eggWidth / 2, Position.Y + eggHeight / 2);
+            Hitbox.Center = new Vector2(Position.X + Width / 2, Position.Y + Height / 2);
 
             // makes the egg bounce like DVD logo
-            if (Position.X <= 0 || Position.X + eggWidth >= screenWidth)
+            if (Position.X <= 0 || Position.X + Width >= screenWidth)
             {
                 Velocity.X *= -1;
             }
 
-            if (Position.Y <= 0 || Position.Y + eggHeight >= screenHeight)
+            if (Position.Y <= 0 || Position.Y + Width >= screenHeight)
             {
                 Velocity.Y *= -1;
             }
@@ -119,9 +102,9 @@ namespace EggQuest
         }
 
         // Draws the egg and projectiles
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Texture, Position, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
+            base.Draw(gameTime, spriteBatch);
 
             foreach (var projectile in Projectiles)
             {

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace EggQuest.Collisions
 {
-    public struct BoundingOval
+    public struct BoundingOval : IBoundingShape
     {
         /// <summary>
         /// The center of the bounding oval.
@@ -38,6 +38,15 @@ namespace EggQuest.Collisions
             VerticalRadius = verticalRadius;
         }
 
+        public bool CollidesWith(IBoundingShape other)
+        {
+            if (other is BoundingRectangle rect) return CollisionHelper.Collides(this, rect);
+            if (other is BoundingCircle circle) return CollisionHelper.Collides(circle, this);
+            if (other is BoundingOval oval) return CollisionHelper.Collides(oval, this);
+
+            return false;
+        }
+
         /// <summary>
         /// Tests a collision between this and another bounding oval.
         /// </summary>
@@ -45,7 +54,7 @@ namespace EggQuest.Collisions
         /// <returns>True for collision, false otherwise.</returns>
         public bool CollidesWith(BoundingOval other)
         {
-            return CollisisionHelper.Collides(this, other);
+            return CollisionHelper.Collides(this, other);
         }
 
         /// <summary>
@@ -55,7 +64,7 @@ namespace EggQuest.Collisions
         /// <returns>True for collision, false otherwise.</returns>
         public bool CollidesWith(BoundingRectangle other)
         {
-            return CollisisionHelper.Collides(this, other);
+            return CollisionHelper.Collides(this, other);
         }
 
         /// <summary>
@@ -65,7 +74,28 @@ namespace EggQuest.Collisions
         /// <returns>True for collision, false otherwise.</returns>
         public bool CollidesWith(BoundingCircle other)
         {
-            return CollisisionHelper.Collides(other, this);
+            return CollisionHelper.Collides(other, this);
+        }
+
+        public float GetHeight() => VerticalRadius;
+
+        public Vector2 GetPosition() => Center;
+
+        public float GetWidth() => HorizontalRadius;
+
+        public void SetHeight(float height)
+        {
+            VerticalRadius = height;
+        }
+
+        public void SetPosition(Vector2 position)
+        {
+            Center = position;
+        }
+
+        public void SetWidth(float width)
+        {
+            HorizontalRadius = width;
         }
     }
 }
