@@ -36,6 +36,11 @@ namespace EggQuest
             _graphics.PreferredBackBufferHeight = _screenHeight;
             _graphics.ApplyChanges();
 
+            Projectile.ScreenHeight = _screenHeight;
+            Projectile.ScreenWidth = _screenWidth;
+            Egg.ScreenHeight = _screenHeight;
+            Egg.ScreenWidth = _screenWidth;
+
             _inputManager = new InputManager();
             _player = new Player(new Vector2(_screenWidth / 2, _screenHeight / 2));
             _theEgg = new Egg();
