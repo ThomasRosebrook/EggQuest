@@ -36,12 +36,16 @@ namespace EggQuest
         public static int ScreenWidth;
         public static int ScreenHeight;
 
+        HealthBar healthBar;
+
         public Egg() : base(new BoundingOval())
         {
             Position = new Vector2(400, 200); // Where the egg spawns
             Velocity = new Vector2(-2, -2); // Initial speed and direction of the egg
             timeSinceLastShot = 0;
             hp = 1; //change for whatever we want it to be in the future
+
+            healthBar = new HealthBar(HealthType.Egg, hp, new Vector2(ScreenWidth - hp * 32, 48));
         }
 
         public override void LoadContent(ContentManager content)
@@ -55,6 +59,7 @@ namespace EggQuest
             Vector2 eggCenter = new Vector2(Position.X + Width / 2, Position.Y + Height / 2); //center of the egg for rotating stuff to make an oval
 
             Hitbox = new BoundingOval(eggCenter, Width / 2, Height / 2);
+            healthBar.LoadContent(content);
         }
 
         public override void Update(GameTime gameTime)
@@ -122,6 +127,8 @@ namespace EggQuest
             {
                 projectile.Draw(gameTime, spriteBatch);
             }
+
+            healthBar.Draw(gameTime, spriteBatch);
         }
 
         /// <summary>
@@ -130,6 +137,7 @@ namespace EggQuest
         public void onhit()
         {
             hp -= 1;
+            healthBar.Health -= 1;
             EggDamageSound.Play();
             // the egg flashes red for a second maybe.
         }

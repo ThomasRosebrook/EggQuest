@@ -51,11 +51,14 @@ namespace EggQuest
         float angle;
         Vector2 direction = new Vector2(0,-1);
 
+        private HealthBar healthBar;
+
         public Player (Vector2 position) : base(new BoundingRectangle(position.X, position.Y, 66, 106))
         {
             Position = position;
             Width = 66;
             Height = 106;
+            healthBar = new HealthBar(HealthType.Heart, hp, new Vector2(64,64));
         }
         public override void Update(GameTime gameTime)
         {
@@ -133,6 +136,7 @@ namespace EggQuest
             projectileTexture = content.Load<Texture2D>("Bacon");
             ProjectileSound = content.Load<SoundEffect>("Projectile_ship");
             TakeDamage = content.Load<SoundEffect>("Hit");
+            healthBar.LoadContent(content);
         }
 
         public void SpawnProjectile()
@@ -152,7 +156,9 @@ namespace EggQuest
                 _flashTimer = FlashDuration;
                 _shipColor = Color.Red;
                 hp -= 1;
+                healthBar.Health -= 1;
                 TakeDamage.Play();
+                
             }
 
         }
@@ -164,6 +170,8 @@ namespace EggQuest
             {
                 projectile.Draw(gameTime, spriteBatch);
             }
+
+            healthBar.Draw(gameTime, spriteBatch);
         }
     }
 }
