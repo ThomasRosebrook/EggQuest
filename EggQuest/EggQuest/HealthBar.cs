@@ -13,6 +13,14 @@ namespace EggQuest
 
         HealthType HealthBarType;
 
+        int HealthSize
+        {
+            get {
+                if (HealthBarType == HealthType.Heart) return 64;
+                else return 32;
+            }
+        }
+
         public HealthBar (HealthType type, int maxHealth, Vector2 position) : base(new BoundingRectangle())
         {
             HealthBarType = type;
@@ -29,15 +37,15 @@ namespace EggQuest
         public override void LoadContent(ContentManager content)
         {
             if (HealthBarType == HealthType.Heart) Texture = content.Load<Texture2D>("Heart");
-            else Texture = content.Load<Texture2D>("ShellFragment");
+            else Texture = content.Load<Texture2D>("EggHealth");
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             for (int i = 0; i < MaxHealth; i++)
             {
-                int xPos = (i < Health) ? 0 : 64;
-                spriteBatch.Draw(Texture, Position + new Vector2(i * 64,0), new Rectangle(xPos, 0, 64, 64), Color.White, 0f, new Vector2(32, 32), 1f, SpriteEffects.None, 0f);
+                int xPos = (i < Health) ? 0 : HealthSize;
+                spriteBatch.Draw(Texture, Position + new Vector2(i * HealthSize, 0), new Rectangle(xPos, 0, HealthSize, HealthSize), Color.White, 0f, new Vector2(HealthSize / 2, HealthSize / 2), 1f, SpriteEffects.None, 0f);
             }
         }
     }
