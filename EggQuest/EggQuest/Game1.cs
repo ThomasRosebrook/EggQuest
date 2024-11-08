@@ -39,7 +39,7 @@ namespace EggQuest
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _theEgg.LoadContent(Content);
             _player.LoadContent(Content);
-            _font = Content.Load<SpriteFont>("WhateverFontWeWant");//need something here
+            _font = Content.Load<SpriteFont>("Arcade");//need something here
         }
 
         protected override void Update(GameTime gameTime)
