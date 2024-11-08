@@ -11,6 +11,11 @@ namespace EggQuest
     public class Egg : Object2D
     {
         /// <summary>
+        /// how much health the egg has. i specifically think we shouldnt use a health bar. 
+        /// </summary>
+        public int hp;
+
+        /// <summary>
         /// image for projectile
         /// </summary>
         public Texture2D PTexture;
@@ -20,16 +25,17 @@ namespace EggQuest
         /// </summary>
         public Vector2 Origin;
 
-        private const int SpawnInterval = 1000;
+        private const int SpawnInterval = 99999999;
         private double timeSinceLastShot;
 
         public List<Projectile> Projectiles = new List<Projectile>();
 
         public Egg() : base(new BoundingOval())
         {
-            Position = new Vector2(100, 100); // Where the egg spawns
-            Velocity = new Vector2(2, 2); // Initial speed and direction of the egg
+            Position = new Vector2(400, 200); // Where the egg spawns
+            Velocity = new Vector2(-2, -2); // Initial speed and direction of the egg
             timeSinceLastShot = 0;
+            hp = 10; //change for whatever we want it to be in the future
         }
 
         public override void LoadContent(ContentManager content)
@@ -50,12 +56,12 @@ namespace EggQuest
             Hitbox.SetPosition(new Vector2(Position.X + Width / 2, Position.Y + Height / 2));
 
             // makes the egg bounce like DVD logo
-            if (Position.X <= 0 || Position.X + Width >= screenWidth)
+            if (Position.X <= Width / 2 || Position.X + Width / 2 >= screenWidth)
             {
                 Velocity.X *= -1;
             }
 
-            if (Position.Y <= 0 || Position.Y + Width >= screenHeight)
+            if (Position.Y <= Height / 2 || Position.Y + Height / 2>= screenHeight)
             {
                 Velocity.Y *= -1;
             }
@@ -95,7 +101,8 @@ namespace EggQuest
 
             foreach (var direction in directions)
             {
-                Projectiles.Add(new Projectile(Position, direction * 5, PTexture)); ///number can be increased for more speed
+                Projectiles.Add(new Projectile(Position, direction * 5, PTexture, 1)); ///number can be increased for more speed
+                //the 1 at the end is the scale. since these are the boss projectiles probabyl make em bigger. 
             }
         }
 
@@ -108,6 +115,15 @@ namespace EggQuest
             {
                 projectile.Draw(gameTime, spriteBatch);
             }
+        }
+
+        /// <summary>
+        /// would handel everything that happens with getting hit. 
+        /// </summary>
+        public void onhit()
+        {
+            //hp goes down by 1. 
+            // the egg flashes red for a second
         }
     }
 }

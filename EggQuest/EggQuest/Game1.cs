@@ -13,6 +13,8 @@ namespace EggQuest
         private InputManager _inputManager;
         private int _screenWidth = 1000;
         private int _screenHeight = 800;
+        private double timer; 
+        private SpriteFont _font;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -37,6 +39,7 @@ namespace EggQuest
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _theEgg.LoadContent(Content);
             _player.LoadContent(Content);
+            _font = Content.Load<SpriteFont>("WhateverFontWeWant");//need something here
         }
 
         protected override void Update(GameTime gameTime)
@@ -46,6 +49,7 @@ namespace EggQuest
             _theEgg.Update(gameTime, _screenWidth, _screenHeight);
             _player.Velocity = _inputManager.Direction * 100;
             _player.Update(gameTime);
+            timer += gameTime.ElapsedGameTime.TotalSeconds;
             base.Update(gameTime);
         }
 
@@ -55,6 +59,19 @@ namespace EggQuest
             _spriteBatch.Begin();
             _theEgg.Draw(gameTime, _spriteBatch);
             _player.Draw(gameTime, _spriteBatch);
+            if(_theEgg.hp <= 0)
+            {/// if you beat the game it will be handled here
+                GraphicsDevice.Clear(Color.Black);
+                Vector2 messageSize = _font.MeasureString("You Won");
+                Vector2 position = new Vector2((_screenWidth - messageSize.X) / 2, (_screenHeight - messageSize.Y) / 2);
+                _spriteBatch.DrawString(_font, "You Won", position, Color.White);
+            }
+            else
+            {
+                _spriteBatch.DrawString(_font, timer.ToString("F2"), new Vector2(50, 50), Color.White);
+                _theEgg.Draw(gameTime, _spriteBatch);
+            }
+
             _spriteBatch.End();
 
             base.Draw(gameTime);
