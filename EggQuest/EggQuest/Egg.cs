@@ -47,7 +47,7 @@ namespace EggQuest
         public override void LoadContent(ContentManager content)
         {
             Texture = content.Load<Texture2D>("MissingTexture");
-            PTexture = content.Load<Texture2D>("MissingTexture");
+            PTexture = content.Load<Texture2D>("ShellFragment");
             EggDamageSound = content.Load<SoundEffect>("EggHit");
             Width = Texture.Width;
             Height = Texture.Height;
@@ -108,7 +108,7 @@ namespace EggQuest
 
             foreach (var direction in directions)
             {
-                Projectiles.Add(new Projectile(Position, direction * 5, PTexture, 1)); ///number can be increased for more speed
+                Projectiles.Add(new Projectile(Position, direction * 5, PTexture, 1, RandomHelper.NextFloat(0,MathHelper.TwoPi))); ///number can be increased for more speed
                 //the 1 at the end is the scale. since these are the boss p
             }
         }
