@@ -63,7 +63,7 @@ namespace EggQuest
             _inputManager.Update(gameTime);
             if (_inputManager.Exit) Exit();
 
-            if (_player.hp > 0)
+            if (_player.hp > 0 && _theEgg.hp > 0)
             {
                 Projectile toRemove = null;
                 foreach (Projectile p in _theEgg.Projectiles)
@@ -129,8 +129,8 @@ namespace EggQuest
             {
                 _theEgg.Draw(gameTime, _spriteBatch);
                 _player.Draw(gameTime, _spriteBatch);
-                _spriteBatch.DrawString(_font, timer.ToString("F2"), new Vector2(50, 50), Color.White);
-                _spriteBatch.DrawString(_font, "HP " + _player.hp.ToString(), new Vector2(50, 20), Color.White);
+                _spriteBatch.DrawString(_font, timer.ToString("F0"), new Vector2(50, 100), Color.White);
+                //_spriteBatch.DrawString(_font, "HP " + _player.hp.ToString(), new Vector2(50, 20), Color.White);
             }
 
             _spriteBatch.End();
