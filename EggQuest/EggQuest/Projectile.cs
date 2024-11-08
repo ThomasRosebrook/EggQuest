@@ -1,58 +1,44 @@
 ﻿using EggQuest.Collisions;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using SharpDX.Direct3D9;
 
 namespace EggQuest
 {
-    public class Projectile
+    public class Projectile : Object2D
     {
-        /// <summary>
-        /// position of the projectile
-        /// </summary>
-        public Vector2 Position { get; private set; }
         /// <summary>
         /// the orgin of the projectile
         /// </summary>
         public Vector2 Origin;
-
-        /// <summary>
-        /// velcoity of the projectile
-        /// </summary>
-        public Vector2 Velocity { get; private set; }
-
-        /// <summary>
-        /// whatever teh texture is
-        /// </summary>
-        private Texture2D texture;
-        public BoundingRectangle Hitbox;
-
         public bool IsActive;
 
-        public Projectile(Vector2 startPosition, Vector2 velocity, Texture2D image)
+        public Projectile(Vector2 startPosition, Vector2 velocity, Texture2D image) : base(new BoundingRectangle(startPosition.X - image.Width / 2, startPosition.Y - image.Height / 2, image.Width, image.Height))
         {
             Position = startPosition;
             Velocity = velocity;
             IsActive = true;
-            texture = image;
-            Origin = new Vector2(texture.Width / 2, texture.Height / 2);
-            Hitbox = new BoundingRectangle(Position.X - Origin.X, Position.Y - Origin.Y, texture.Width, texture.Height);
+            Texture = image;
+            Width = image.Width;
+            Height = image.Height;
+
+            Origin = new Vector2(Texture.Width / 2, Texture.Height / 2);
 
         }
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             Position += Velocity;
-            Hitbox.Y = Position.Y;
-            Hitbox.X = Position.X;
-            if (Position.X < 0 - texture.Width || Position.X > 1000 + texture.Width || Position.Y < 0 - texture.Height || Position.Y > 800 + texture.Height)
+            Hitbox.SetPosition(Position);
+            if (Position.X < 0 - Width || Position.X > 1000 + Width || Position.Y < 0 - Height || Position.Y > 800 + Height)
             {
                 IsActive = false;
             }
         }
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (IsActive)
             {
-                spriteBatch.Draw(texture, Position, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
+                base.Draw(gameTime, spriteBatch);
             }
         }
     }

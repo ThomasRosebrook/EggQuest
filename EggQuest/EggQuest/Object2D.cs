@@ -16,11 +16,6 @@ namespace EggQuest
         public Vector2 Position;
 
         /// <summary>
-        /// Texture of the object
-        /// </summary>
-        public Texture2D Texture;
-
-        /// <summary>
         /// Velocity of the object
         /// </summary>
         public Vector2 Velocity = new Vector2(0,0);
@@ -41,9 +36,14 @@ namespace EggQuest
         public int Height;
 
         /// <summary>
+        /// Texture of the object
+        /// </summary>
+        protected Texture2D Texture;
+
+        /// <summary>
         /// The BoundingRectangle, BoundingOval, or BoundingCircle of the object
         /// </summary>
-        IBoundingShape Hitbox;
+        protected IBoundingShape Hitbox;
 
         /// <summary>
         /// Constructor for a 2D object
