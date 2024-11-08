@@ -18,6 +18,8 @@ namespace EggQuest
 
         public bool Exit { get; private set; } = false;
 
+        public bool SpacePressed { get; private set; } = false;
+
         public void Update(GameTime gameTime)
         {
             previousMouseState = currentMouseState;
@@ -58,6 +60,8 @@ namespace EggQuest
             }
 
             if (Direction.X == 0 && Direction.Y == 0) Direction = currentGamePadState.ThumbSticks.Left * time * new Vector2(1, -1);
+
+            SpacePressed = currentKeyboardState.IsKeyDown(Keys.Space) && previousKeyboardState.IsKeyUp(Keys.Space) || currentGamePadState.Buttons.A == ButtonState.Pressed && previousGamePadState.Buttons.A == ButtonState.Released;
 
             Exit = false;
             if (currentGamePadState.Buttons.Back == ButtonState.Pressed && previousGamePadState.Buttons.Back != ButtonState.Pressed || currentKeyboardState.IsKeyDown(Keys.Escape) && !previousKeyboardState.IsKeyDown(Keys.Escape))

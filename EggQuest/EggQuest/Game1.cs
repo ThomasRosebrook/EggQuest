@@ -51,30 +51,38 @@ namespace EggQuest
         {
             _inputManager.Update(gameTime);
             if (_inputManager.Exit) Exit();
-            Projectile toRemove = null;
-            foreach(Projectile p in _theEgg.Projectiles)
+
+            if (_player.hp > 0)
             {
-                if (p.CollidesWith(_player))
+                Projectile toRemove = null;
+                foreach (Projectile p in _theEgg.Projectiles)
                 {
-                    _player.OnHit();
-                    toRemove = p;
+                    if (p.CollidesWith(_player))
+                    {
+                        _player.OnHit();
+                        toRemove = p;
+                    }
                 }
+                if (toRemove != null)
+                {
+                    _theEgg.Projectiles.Remove(toRemove);
+                }
+                /*
+                foreach(Projectile p in _player.projectiles)
+                {
+                    do something here
+                }
+                */
+                _theEgg.Update(gameTime, _screenWidth, _screenHeight);
+                _player.InputDirection = _inputManager.Direction;
+                _player.Update(gameTime);
+                timer += gameTime.ElapsedGameTime.TotalSeconds;
+                base.Update(gameTime);
             }
-            if (toRemove != null)
+            else
             {
-                _theEgg.Projectiles.Remove(toRemove);
+                if (_inputManager.SpacePressed) ResetGame();
             }
-            /*
-            foreach(Projectile p in _player.projectiles)
-            {
-                do something here
-            }
-            */
-            _theEgg.Update(gameTime, _screenWidth, _screenHeight);
-            _player.InputDirection = _inputManager.Direction;
-            _player.Update(gameTime);
-            timer += gameTime.ElapsedGameTime.TotalSeconds;
-            base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -91,9 +99,14 @@ namespace EggQuest
             }else if(_player.hp <= 0)
             {
                 GraphicsDevice.Clear(Color.Black);
-                Vector2 messageSize = _font.MeasureString("You Lose");
+                string message = "You Lose";
+                Vector2 messageSize = _font.MeasureString(message);
                 Vector2 position = new Vector2((_screenWidth - messageSize.X) / 2, (_screenHeight - messageSize.Y) / 2);
-                _spriteBatch.DrawString(_font, "You Lose", position, Color.White);
+                _spriteBatch.DrawString(_font, message, position, Color.White);
+                message = "Press Space to Retry";
+                messageSize = _font.MeasureString(message);
+                position = new Vector2((_screenWidth - messageSize.X) / 2, (_screenHeight - messageSize.Y) / 2 + 50);
+                _spriteBatch.DrawString(_font, message, position, Color.White);
             }
             else
             {
@@ -106,6 +119,14 @@ namespace EggQuest
             _spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        private void ResetGame()
+        {
+            _player = new Player(new Vector2(_screenWidth / 2, _screenHeight / 2));
+            _theEgg = new Egg();
+            _theEgg.LoadContent(Content);
+            _player.LoadContent(Content);
         }
     }
 }
