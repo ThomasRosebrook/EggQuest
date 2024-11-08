@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using EggQuest.Collisions;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 namespace EggQuest
 {
     public class Game1 : Game
@@ -16,6 +17,7 @@ namespace EggQuest
         private int _screenHeight = 800;
         private double timer; 
         private SpriteFont _font;
+        private Texture2D _background;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -41,6 +43,8 @@ namespace EggQuest
             _theEgg.LoadContent(Content);
             _player.LoadContent(Content);
             _font = Content.Load<SpriteFont>("ArcadeClassic");
+            //_font = Content.Load<SpriteFont>("Arcade");
+            _background = Content.Load<Texture2D>("background-purple");
         }
 
         protected override void Update(GameTime gameTime)
@@ -77,8 +81,8 @@ namespace EggQuest
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             _spriteBatch.Begin();
-
-            if(_theEgg.hp <= 0)
+            _spriteBatch.Draw(_background, new Rectangle(0, 0, _screenWidth, _screenHeight), Color.White);
+            if (_theEgg.hp <= 0)
             {/// if you beat the game it will be handled here
                 GraphicsDevice.Clear(Color.Black);
                 Vector2 messageSize = _font.MeasureString("You Won");

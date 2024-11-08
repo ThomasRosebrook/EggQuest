@@ -25,7 +25,7 @@ namespace EggQuest
         /// </summary>
         public Vector2 Origin;
 
-        private const int SpawnInterval = 3000;
+        private const int SpawnInterval = 2000;
         private double timeSinceLastShot;
 
         public List<Projectile> Projectiles = new List<Projectile>();
