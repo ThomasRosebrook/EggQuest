@@ -67,12 +67,16 @@ namespace EggQuest
                 {
                     _theEgg.Projectiles.Remove(toRemove);
                 }
-                /*
-                foreach(Projectile p in _player.projectiles)
+                
+                foreach(Projectile p in _player.Projectiles)
                 {
-                    do something here
+                    if (p.CollidesWith(_theEgg))
+                    {
+                        //Handle THE EGG being hit here
+                    }
                 }
-                */
+                
+                if (_inputManager.SpacePressed) _player.SpawnProjectile();
                 _theEgg.Update(gameTime, _screenWidth, _screenHeight);
                 _player.InputDirection = _inputManager.Direction;
                 _player.Update(gameTime);

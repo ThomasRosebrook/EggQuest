@@ -2,13 +2,16 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using SharpDX.Direct3D9;
 using System;
+using System.Collections.Generic;
 
 namespace EggQuest
 {
     public class Player : Object2D
     {
         const float SPEED = 2;
+        const float BACON_SPEED = 5;
 
         /// <summary>
         /// color of the ship for when taking damage
@@ -31,6 +34,10 @@ namespace EggQuest
         short directionIndex;
         short animationFrame;
         double animationTimer = 0;
+
+        Texture2D projectileTexture;
+
+        public List<Projectile> Projectiles = new List<Projectile>();
 
         float angle;
         Vector2 direction = new Vector2(0,-1);
@@ -103,25 +110,47 @@ namespace EggQuest
                 animationTimer = 0;
             }
             else animationTimer += gameTime.ElapsedGameTime.TotalSeconds * 100;
+
+            foreach (var projectile in Projectiles)
+            {
+                projectile.Update(gameTime);
+            }
+            Projectiles.RemoveAll(p => !p.IsActive);
         }
+
         public override void LoadContent(ContentManager content)
         {
             Texture = content.Load<Texture2D>("Spatula");
+            projectileTexture = content.Load<Texture2D>("Bacon");
             //origin = new Vector2(Texture.Width / 2f, Texture.Height / 2f);
         }
+
+        public void SpawnProjectile()
+        {
+            Projectiles.Add(new Projectile(Position + 50 * direction, direction * BACON_SPEED, projectileTexture, 1));
+        }
+
         /// <summary>
         /// method to handle everything that happens when the ship takes damage
         /// </summary>
         public void OnHit()
         {
-            _isFlashing = true;
-            _flashTimer = FlashDuration;
-            _shipColor = Color.Red;
-            hp -= 1;
+            if (!_isFlashing)
+            {
+                _isFlashing = true;
+                _flashTimer = FlashDuration;
+                _shipColor = Color.Red;
+                hp -= 1;
+            }
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Texture, Position, new Rectangle(animationFrame * 128, directionIndex * 128, 128, 128), _shipColor, angle, new Vector2(64, 64), 1f, SpriteEffects.None, 0f);
+
+            foreach (var projectile in Projectiles)
+            {
+                projectile.Draw(gameTime, spriteBatch);
+            }
         }
     }
 }
