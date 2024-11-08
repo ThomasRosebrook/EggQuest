@@ -1,5 +1,6 @@
 ﻿using EggQuest.Collisions;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using SharpDX.Direct3D9;
@@ -28,6 +29,14 @@ namespace EggQuest
         /// </summary>
         public int hp = 5;
         //private Vector2 origin;
+        /// <summary>
+        /// sound of when shooting a projectile
+        /// </summary>
+        private SoundEffect ProjectileSound;
+        /// <summary>
+        /// sound for when you get hit
+        /// </summary>
+        private SoundEffect TakeDamage;
 
         public Vector2 InputDirection;
 
@@ -122,12 +131,14 @@ namespace EggQuest
         {
             Texture = content.Load<Texture2D>("Spatula");
             projectileTexture = content.Load<Texture2D>("Bacon");
-            //origin = new Vector2(Texture.Width / 2f, Texture.Height / 2f);
+            ProjectileSound = content.Load<SoundEffect>("Projectile_ship");
+            TakeDamage = content.Load<SoundEffect>("Hit");
         }
 
         public void SpawnProjectile()
         {
             Projectiles.Add(new Projectile(Position + 50 * direction, direction * BACON_SPEED, projectileTexture, 1));
+            ProjectileSound.Play();
         }
 
         /// <summary>
@@ -141,7 +152,9 @@ namespace EggQuest
                 _flashTimer = FlashDuration;
                 _shipColor = Color.Red;
                 hp -= 1;
+                TakeDamage.Play();
             }
+
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {

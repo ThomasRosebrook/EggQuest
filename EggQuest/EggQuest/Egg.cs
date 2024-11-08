@@ -3,10 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using EggQuest.Collisions;
-using SharpDX.Direct3D9;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework.Audio;
-
 namespace EggQuest
 {
     public class Egg : Object2D
