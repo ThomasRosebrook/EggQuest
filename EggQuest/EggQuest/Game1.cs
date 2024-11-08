@@ -2,6 +2,10 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using EggQuest.Collisions;
+using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
+using SharpDX.Direct3D9;
+
 using Microsoft.Xna.Framework.Media;
 namespace EggQuest
 {
@@ -12,8 +16,8 @@ namespace EggQuest
         private Egg _theEgg;
         private Player _player;
         private InputManager _inputManager;
-        private int _screenWidth = 1000;
-        private int _screenHeight = 800;
+        private int _screenWidth = 1500;
+        private int _screenHeight = 900;
         private double timer; 
         private SpriteFont _font;
         private Texture2D _background;
@@ -23,6 +27,9 @@ namespace EggQuest
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            _graphics.PreferredBackBufferWidth = _screenWidth;
+            _graphics.PreferredBackBufferHeight = _screenHeight;
         }
 
         protected override void Initialize()
@@ -32,10 +39,17 @@ namespace EggQuest
             _graphics.PreferredBackBufferHeight = _screenHeight;
             _graphics.ApplyChanges();
 
+            
+
             _inputManager = new InputManager();
             _player = new Player(new Vector2(_screenWidth / 2, _screenHeight / 2));
             _theEgg = new Egg();
+            Projectile.ScreenHeight = _screenHeight;
+            Projectile.ScreenWidth = _screenWidth;
+            Egg.ScreenHeight = _screenHeight;
+            Egg.ScreenWidth = _screenWidth;
             base.Initialize();
+
         }
 
         protected override void LoadContent()
@@ -73,15 +87,18 @@ namespace EggQuest
                 {
                     if (p.CollidesWith(_theEgg))
                     {
-                        //Handle THE EGG being hit here
+                        _theEgg.onhit();
+                        p.IsActive = false;
                     }
                 }
+                _player.Projectiles.RemoveAll(p => !p.IsActive);
+
                 if (MediaPlayer.State != MediaState.Playing)
                 {
                     MediaPlayer.Play(_spaceStation);
                 }
                 if (_inputManager.SpacePressed) _player.SpawnProjectile();
-                _theEgg.Update(gameTime, _screenWidth, _screenHeight);
+                _theEgg.Update(gameTime);
                 _player.InputDirection = _inputManager.Direction;
                 _player.Update(gameTime);
                 timer += gameTime.ElapsedGameTime.TotalSeconds;

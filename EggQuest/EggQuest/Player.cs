@@ -137,7 +137,7 @@ namespace EggQuest
 
         public void SpawnProjectile()
         {
-            Projectiles.Add(new Projectile(Position + 50 * direction, direction * BACON_SPEED, projectileTexture, 1));
+            Projectiles.Add(new Projectile(Position + 50 * direction, direction * BACON_SPEED, projectileTexture, 1, angle));
             ProjectileSound.Play();
         }
 
