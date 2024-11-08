@@ -41,7 +41,7 @@ namespace EggQuest
             Position = new Vector2(400, 200); // Where the egg spawns
             Velocity = new Vector2(-2, -2); // Initial speed and direction of the egg
             timeSinceLastShot = 0;
-            hp = 10; //change for whatever we want it to be in the future
+            hp = 1; //change for whatever we want it to be in the future
         }
 
         public override void LoadContent(ContentManager content)
