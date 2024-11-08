@@ -13,12 +13,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin Arcade.spritefont
+#begin ArcadeClassic.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:Arcade.spritefont
+/build:ArcadeClassic.spritefont
 
 #begin MissingTexture.png
 /importer:TextureImporter
