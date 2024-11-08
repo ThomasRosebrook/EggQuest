@@ -32,6 +32,18 @@
 /processorParam:TextureFormat=Color
 /build:background-purple.png
 
+#begin EggHit.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:EggHit.mp3
+
+#begin Hit.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Hit.wav
+
 #begin MissingTexture.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -43,6 +55,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:MissingTexture.png
+
+#begin Projectile_ship.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Projectile_ship.wav
 
 #begin Spatula.png
 /importer:TextureImporter

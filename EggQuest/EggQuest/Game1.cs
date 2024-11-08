@@ -42,8 +42,7 @@ namespace EggQuest
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _theEgg.LoadContent(Content);
             _player.LoadContent(Content);
-            _font = Content.Load<SpriteFont>("ArcadeClassic");
-            //_font = Content.Load<SpriteFont>("Arcade");
+            _font = Content.Load<SpriteFont>("Arcade");
             _background = Content.Load<Texture2D>("background-purple");
         }
 

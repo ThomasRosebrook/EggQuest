@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using EggQuest.Collisions;
 using SharpDX.Direct3D9;
 using System.Windows.Forms;
+using Microsoft.Xna.Framework.Audio;
 
 namespace EggQuest
 {
@@ -24,6 +25,10 @@ namespace EggQuest
         /// Center of the egg for drawing
         /// </summary>
         public Vector2 Origin;
+        /// <summary>
+        /// sound for when egg gets hit
+        /// </summary>
+        public SoundEffect EggDamageSound;
 
         private const int SpawnInterval = 2000;
         private double timeSinceLastShot;
@@ -42,6 +47,7 @@ namespace EggQuest
         {
             Texture = content.Load<Texture2D>("MissingTexture");
             PTexture = content.Load<Texture2D>("MissingTexture");
+            EggDamageSound = content.Load<SoundEffect>("EggHit");
             Width = Texture.Width;
             Height = Texture.Height;
             Origin = new Vector2(Width / 2, Height / 2); // Center of the egg
@@ -122,8 +128,9 @@ namespace EggQuest
         /// </summary>
         public void onhit()
         {
-            //hp goes down by 1. 
-            // the egg flashes red for a second
+            hp -= 1;
+            EggDamageSound.Play();
+            // the egg flashes red for a second maybe.
         }
     }
 }
