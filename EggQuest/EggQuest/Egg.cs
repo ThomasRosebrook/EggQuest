@@ -102,7 +102,7 @@ namespace EggQuest
             foreach (var direction in directions)
             {
                 Projectiles.Add(new Projectile(Position, direction * 5, PTexture, 1)); ///number can be increased for more speed
-                //the 1 at the end is the scale. since these are the boss projectiles probabyl make em bigger. 
+                //the 1 at the end is the scale. since these are the boss p
             }
         }
 

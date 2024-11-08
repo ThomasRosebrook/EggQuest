@@ -1,7 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
+using EggQuest.Collisions;
+using System.Windows.Forms;
 namespace EggQuest
 {
     public class Game1 : Game
@@ -39,13 +40,32 @@ namespace EggQuest
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _theEgg.LoadContent(Content);
             _player.LoadContent(Content);
-            _font = Content.Load<SpriteFont>("Arcade");//need something here
+            _font = Content.Load<SpriteFont>("Arcade");
         }
 
         protected override void Update(GameTime gameTime)
         {
             _inputManager.Update(gameTime);
             if (_inputManager.Exit) Exit();
+            Projectile toRemove = null;
+            foreach(Projectile p in _theEgg.Projectiles)
+            {
+                if (p.Hitbox.CollidesWith(_player.Hitbox))
+                {
+                    _player.OnHit();
+                    toRemove = p;
+                }
+            }
+            if (toRemove != null)
+            {
+                _theEgg.Projectiles.Remove(toRemove);
+            }
+            /*
+            foreach(Projectile p in _player.projectiles)
+            {
+                do something here
+            }
+            */
             _theEgg.Update(gameTime, _screenWidth, _screenHeight);
             _player.Velocity = _inputManager.Direction * 100;
             _player.Update(gameTime);
@@ -57,19 +77,26 @@ namespace EggQuest
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             _spriteBatch.Begin();
-            _theEgg.Draw(gameTime, _spriteBatch);
-            _player.Draw(gameTime, _spriteBatch);
+
             if(_theEgg.hp <= 0)
             {/// if you beat the game it will be handled here
                 GraphicsDevice.Clear(Color.Black);
                 Vector2 messageSize = _font.MeasureString("You Won");
                 Vector2 position = new Vector2((_screenWidth - messageSize.X) / 2, (_screenHeight - messageSize.Y) / 2);
                 _spriteBatch.DrawString(_font, "You Won", position, Color.White);
+            }else if(_player.hp <= 0)
+            {
+                GraphicsDevice.Clear(Color.Black);
+                Vector2 messageSize = _font.MeasureString("You Lose");
+                Vector2 position = new Vector2((_screenWidth - messageSize.X) / 2, (_screenHeight - messageSize.Y) / 2);
+                _spriteBatch.DrawString(_font, "You Lose", position, Color.White);
             }
             else
             {
-                _spriteBatch.DrawString(_font, timer.ToString("F2"), new Vector2(50, 50), Color.White);
                 _theEgg.Draw(gameTime, _spriteBatch);
+                _player.Draw(gameTime, _spriteBatch);
+                _spriteBatch.DrawString(_font, timer.ToString("F2"), new Vector2(50, 50), Color.White);
+                _spriteBatch.DrawString(_font, "HP " + _player.hp.ToString(), new Vector2(50, 20), Color.White);
             }
 
             _spriteBatch.End();

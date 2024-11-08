@@ -43,7 +43,7 @@ namespace EggQuest
         /// <summary>
         /// The BoundingRectangle, BoundingOval, or BoundingCircle of the object
         /// </summary>
-        protected IBoundingShape Hitbox;
+        public IBoundingShape Hitbox;
 
         /// <summary>
         /// Constructor for a 2D object
@@ -73,6 +73,7 @@ namespace EggQuest
         {
             Velocity += Acceleration;
             Position += Velocity;
+            Hitbox.SetPosition(new Vector2(Position.X + Width / 2, Position.Y + Height / 2));
         }
 
         /// <summary>
