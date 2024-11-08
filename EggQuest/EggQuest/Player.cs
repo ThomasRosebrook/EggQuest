@@ -121,7 +121,7 @@ namespace EggQuest
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Texture, Position, new Rectangle(animationFrame * 128, directionIndex * 128, 128, 128), _shipColor, angle, new Vector2(Width / 2, Height / 2), 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture, Position, new Rectangle(animationFrame * 128, directionIndex * 128, 128, 128), _shipColor, angle, new Vector2(64, 64), 1f, SpriteEffects.None, 0f);
         }
     }
 }

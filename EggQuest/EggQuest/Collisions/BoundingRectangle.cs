@@ -17,10 +17,10 @@ namespace EggQuest.Collisions
         public float Y;
         public float Width;
         public float Height;
-        public float Left => X;
-        public float Right => X + Width;
-        public float Top => Y;
-        public float Bottom => Y+ Height;
+        public float Left => X - Width / 2;
+        public float Right => X + Width / 2;
+        public float Top => Y - Height / 2;
+        public float Bottom => Y + Height / 2;
 
         public BoundingRectangle(float x, float y, float width, float height)
         {
