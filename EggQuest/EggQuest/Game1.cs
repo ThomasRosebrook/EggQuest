@@ -1,12 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using EggQuest.Collisions;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
-using SharpDX.Direct3D9;
-
 using Microsoft.Xna.Framework.Media;
+
 namespace EggQuest
 {
     public class Game1 : Game
@@ -22,9 +18,7 @@ namespace EggQuest
         private SpriteFont _font;
         private Texture2D _background;
         private Song _spaceStation;
-        private Video _victory;
-        private VideoPlayer _videoPlayer;
-        private bool _playing = false;
+        private Texture2D _scrambeled;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -41,8 +35,6 @@ namespace EggQuest
             _graphics.PreferredBackBufferWidth = _screenWidth;
             _graphics.PreferredBackBufferHeight = _screenHeight;
             _graphics.ApplyChanges();
-            _videoPlayer = new VideoPlayer();
-
 
             _inputManager = new InputManager();
             _player = new Player(new Vector2(_screenWidth / 2, _screenHeight / 2));
@@ -63,7 +55,7 @@ namespace EggQuest
             _font = Content.Load<SpriteFont>("Arcade");
             _background = Content.Load<Texture2D>("background-purple");
             _spaceStation = Content.Load<Song>("space_station");
-            _victory = Content.Load<Video>("EggWin");
+            _scrambeled = Content.Load<Texture2D>("ScrambledEggs");
         }
 
         protected override void Update(GameTime gameTime)
@@ -96,14 +88,6 @@ namespace EggQuest
                     }
                 }
                 _player.Projectiles.RemoveAll(p => !p.IsActive);
-                if(_theEgg.hp <= 0)
-                {
-                    if (!_playing)
-                    {
-                        _videoPlayer.Play(_victory);
-                        _playing = true;
-                    }
-                }
                 if (MediaPlayer.State != MediaState.Playing)
                 {
                     MediaPlayer.Play(_spaceStation);
@@ -129,10 +113,7 @@ namespace EggQuest
             if (_theEgg.hp <= 0)
             {/// if you beat the game it will be handled here
                 MediaPlayer.Stop();
-                if (_playing)
-                {
-                    _spriteBatch.Draw(_videoPlayer.GetTexture(), Vector2.Zero, Color.White);
-                }
+                _spriteBatch.Draw(_scrambeled, new Rectangle(0, 0, _screenWidth, _screenHeight), Color.White);
             }
             else if(_player.hp <= 0)
             { /// if you die it happens here

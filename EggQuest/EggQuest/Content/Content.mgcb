@@ -57,10 +57,10 @@
 /processorParam:Quality=Best
 /build:EggHit.mp3
 
-#begin EggWin.mp4
+#begin EggWin2.mp4
 /importer:H264Importer
 /processor:VideoProcessor
-/build:EggWin.mp4
+/build:EggWin2.mp4
 
 #begin Hit.wav
 /importer:WavImporter
