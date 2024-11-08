@@ -41,6 +41,10 @@ namespace EggQuest
             _inputManager = new InputManager();
             _player = new Player(new Vector2(_screenWidth / 2, _screenHeight / 2));
             _theEgg = new Egg();
+            Projectile.ScreenHeight = _screenHeight;
+            Projectile.ScreenWidth = _screenWidth;
+            Egg.ScreenHeight = _screenHeight;
+            Egg.ScreenWidth = _screenWidth;
             base.Initialize();
 
         }
@@ -86,7 +90,7 @@ namespace EggQuest
                 _player.Projectiles.RemoveAll(p => !p.IsActive);
 
                 if (_inputManager.SpacePressed) _player.SpawnProjectile();
-                _theEgg.Update(gameTime, _screenWidth, _screenHeight);
+                _theEgg.Update(gameTime);
                 _player.InputDirection = _inputManager.Direction;
                 _player.Update(gameTime);
                 timer += gameTime.ElapsedGameTime.TotalSeconds;

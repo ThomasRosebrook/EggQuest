@@ -33,6 +33,9 @@ namespace EggQuest
 
         public List<Projectile> Projectiles = new List<Projectile>();
 
+        public static int ScreenWidth;
+        public static int ScreenHeight;
+
         public Egg() : base(new BoundingOval())
         {
             Position = new Vector2(400, 200); // Where the egg spawns
@@ -54,18 +57,18 @@ namespace EggQuest
             Hitbox = new BoundingOval(eggCenter, Width / 2, Height / 2);
         }
 
-        public void Update(GameTime gameTime, int screenWidth, int screenHeight)
+        public override void Update(GameTime gameTime)
         {
             Position += Velocity;
             Hitbox.SetPosition(new Vector2(Position.X + Width / 2, Position.Y + Height / 2));
 
             // makes the egg bounce like DVD logo
-            if (Position.X <= Width / 2 || Position.X + Width / 2 >= screenWidth)
+            if (Position.X <= Width / 2 || Position.X + Width / 2 >= ScreenWidth)
             {
                 Velocity.X *= -1;
             }
 
-            if (Position.Y <= Height / 2 || Position.Y + Height / 2>= screenHeight)
+            if (Position.Y <= Height / 2 || Position.Y + Height / 2>= ScreenHeight)
             {
                 Velocity.Y *= -1;
             }
