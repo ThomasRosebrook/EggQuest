@@ -40,7 +40,7 @@ namespace EggQuest
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _theEgg.LoadContent(Content);
             _player.LoadContent(Content);
-            _font = Content.Load<SpriteFont>("Arcade");
+            _font = Content.Load<SpriteFont>("ArcadeClassic");
         }
 
         protected override void Update(GameTime gameTime)
@@ -50,7 +50,7 @@ namespace EggQuest
             Projectile toRemove = null;
             foreach(Projectile p in _theEgg.Projectiles)
             {
-                if (p.Hitbox.CollidesWith(_player.Hitbox))
+                if (p.CollidesWith(_player))
                 {
                     _player.OnHit();
                     toRemove = p;
@@ -67,7 +67,7 @@ namespace EggQuest
             }
             */
             _theEgg.Update(gameTime, _screenWidth, _screenHeight);
-            _player.Velocity = _inputManager.Direction * 100;
+            _player.InputDirection = _inputManager.Direction;
             _player.Update(gameTime);
             timer += gameTime.ElapsedGameTime.TotalSeconds;
             base.Update(gameTime);

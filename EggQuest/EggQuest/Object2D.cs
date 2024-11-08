@@ -73,7 +73,7 @@ namespace EggQuest
         {
             Velocity += Acceleration;
             Position += Velocity;
-            Hitbox.SetPosition(new Vector2(Position.X + Width / 2, Position.Y + Height / 2));
+            Hitbox.SetPosition(Position);
         }
 
         /// <summary>
