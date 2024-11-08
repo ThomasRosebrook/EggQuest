@@ -71,10 +71,12 @@ namespace EggQuest
                 {
                     if (p.CollidesWith(_theEgg))
                     {
-                        //Handle THE EGG being hit here
+                        _theEgg.onhit();
+                        p.IsActive = false;
                     }
                 }
-                
+                _player.Projectiles.RemoveAll(p => !p.IsActive);
+
                 if (_inputManager.SpacePressed) _player.SpawnProjectile();
                 _theEgg.Update(gameTime, _screenWidth, _screenHeight);
                 _player.InputDirection = _inputManager.Direction;
