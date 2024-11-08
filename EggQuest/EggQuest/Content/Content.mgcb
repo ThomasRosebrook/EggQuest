@@ -105,6 +105,18 @@
 /processorParam:TextureFormat=Color
 /build:ShellFragment.png
 
+#begin space_station.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:space_station.mp3
+
+#begin space_station.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:space_station.mp3
+
 #begin Spatula.png
 /importer:TextureImporter
 /processor:TextureProcessor

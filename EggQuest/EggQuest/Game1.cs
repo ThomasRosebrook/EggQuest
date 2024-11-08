@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 using SharpDX.Direct3D9;
 
+using Microsoft.Xna.Framework.Media;
 namespace EggQuest
 {
     public class Game1 : Game
@@ -20,6 +21,7 @@ namespace EggQuest
         private double timer; 
         private SpriteFont _font;
         private Texture2D _background;
+        private Song _spaceStation;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -32,6 +34,7 @@ namespace EggQuest
 
         protected override void Initialize()
         {
+            MediaPlayer.Volume = 0.5f;
             _graphics.PreferredBackBufferWidth = _screenWidth;
             _graphics.PreferredBackBufferHeight = _screenHeight;
             _graphics.ApplyChanges();
@@ -56,6 +59,7 @@ namespace EggQuest
             _player.LoadContent(Content);
             _font = Content.Load<SpriteFont>("Arcade");
             _background = Content.Load<Texture2D>("background-purple");
+            _spaceStation = Content.Load<Song>("space_station");
         }
 
         protected override void Update(GameTime gameTime)
@@ -89,6 +93,10 @@ namespace EggQuest
                 }
                 _player.Projectiles.RemoveAll(p => !p.IsActive);
 
+                if (MediaPlayer.State != MediaState.Playing)
+                {
+                    MediaPlayer.Play(_spaceStation);
+                }
                 if (_inputManager.SpacePressed) _player.SpawnProjectile();
                 _theEgg.Update(gameTime);
                 _player.InputDirection = _inputManager.Direction;
@@ -109,12 +117,14 @@ namespace EggQuest
             _spriteBatch.Draw(_background, new Rectangle(0, 0, _screenWidth, _screenHeight), Color.White);
             if (_theEgg.hp <= 0)
             {/// if you beat the game it will be handled here
+                MediaPlayer.Stop();
                 GraphicsDevice.Clear(Color.Black);
                 Vector2 messageSize = _font.MeasureString("You Won");
                 Vector2 position = new Vector2((_screenWidth - messageSize.X) / 2, (_screenHeight - messageSize.Y) / 2);
                 _spriteBatch.DrawString(_font, "You Won", position, Color.White);
             }else if(_player.hp <= 0)
             {
+                MediaPlayer.Stop();
                 GraphicsDevice.Clear(Color.Black);
                 string message = "You Lose";
                 Vector2 messageSize = _font.MeasureString(message);
