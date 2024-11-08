@@ -22,6 +22,9 @@ namespace EggQuest
         private SpriteFont _font;
         private Texture2D _background;
         private Song _spaceStation;
+        private Video _victory;
+        private VideoPlayer _videoPlayer;
+        private bool _playing = false;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -38,8 +41,8 @@ namespace EggQuest
             _graphics.PreferredBackBufferWidth = _screenWidth;
             _graphics.PreferredBackBufferHeight = _screenHeight;
             _graphics.ApplyChanges();
+            _videoPlayer = new VideoPlayer();
 
-            
 
             _inputManager = new InputManager();
             _player = new Player(new Vector2(_screenWidth / 2, _screenHeight / 2));
@@ -60,6 +63,7 @@ namespace EggQuest
             _font = Content.Load<SpriteFont>("Arcade");
             _background = Content.Load<Texture2D>("background-purple");
             _spaceStation = Content.Load<Song>("space_station");
+            _victory = Content.Load<Video>("EggWin");
         }
 
         protected override void Update(GameTime gameTime)
@@ -92,7 +96,14 @@ namespace EggQuest
                     }
                 }
                 _player.Projectiles.RemoveAll(p => !p.IsActive);
-
+                if(_theEgg.hp <= 0)
+                {
+                    if (!_playing)
+                    {
+                        _videoPlayer.Play(_victory);
+                        _playing = true;
+                    }
+                }
                 if (MediaPlayer.State != MediaState.Playing)
                 {
                     MediaPlayer.Play(_spaceStation);
@@ -118,12 +129,13 @@ namespace EggQuest
             if (_theEgg.hp <= 0)
             {/// if you beat the game it will be handled here
                 MediaPlayer.Stop();
-                GraphicsDevice.Clear(Color.Black);
-                Vector2 messageSize = _font.MeasureString("You Won");
-                Vector2 position = new Vector2((_screenWidth - messageSize.X) / 2, (_screenHeight - messageSize.Y) / 2);
-                _spriteBatch.DrawString(_font, "You Won", position, Color.White);
-            }else if(_player.hp <= 0)
-            {
+                if (_playing)
+                {
+                    _spriteBatch.Draw(_videoPlayer.GetTexture(), Vector2.Zero, Color.White);
+                }
+            }
+            else if(_player.hp <= 0)
+            { /// if you die it happens here
                 MediaPlayer.Stop();
                 GraphicsDevice.Clear(Color.Black);
                 string message = "You Lose";
