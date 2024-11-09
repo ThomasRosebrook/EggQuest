@@ -1,9 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using EggQuest.Collisions;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
+using Microsoft.Xna.Framework.Media;
+
 namespace EggQuest
 {
     public class Game1 : Game
@@ -13,11 +12,13 @@ namespace EggQuest
         private Egg _theEgg;
         private Player _player;
         private InputManager _inputManager;
-        private int _screenWidth = 1000;
-        private int _screenHeight = 800;
-        private double timer;
+        private int _screenWidth = 1500;
+        private int _screenHeight = 900;
+        private double timer; 
         private SpriteFont _font;
         private Texture2D _background;
+        private Song _spaceStation;
+        private Texture2D _scrambeled;
         private Matrix _view;
         private Matrix _projection;
         public Game1()
@@ -25,13 +26,22 @@ namespace EggQuest
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            _graphics.PreferredBackBufferWidth = _screenWidth;
+            _graphics.PreferredBackBufferHeight = _screenHeight;
         }
 
         protected override void Initialize()
         {
+            MediaPlayer.Volume = 0.5f;
             _graphics.PreferredBackBufferWidth = _screenWidth;
             _graphics.PreferredBackBufferHeight = _screenHeight;
             _graphics.ApplyChanges();
+
+            Projectile.ScreenHeight = _screenHeight;
+            Projectile.ScreenWidth = _screenWidth;
+            Egg.ScreenHeight = _screenHeight;
+            Egg.ScreenWidth = _screenWidth;
 
             _inputManager = new InputManager();
             _player = new Player(new Vector2(_screenWidth / 2, _screenHeight / 2));
@@ -46,6 +56,7 @@ namespace EggQuest
             _theEgg = new Egg(GraphicsDevice, _view, _projection);
 
             base.Initialize();
+
         }
 
         protected override void LoadContent()
@@ -53,9 +64,10 @@ namespace EggQuest
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _theEgg.LoadContent(Content);
             _player.LoadContent(Content);
-            _font = Content.Load<SpriteFont>("ArcadeClassic");
-            //_font = Content.Load<SpriteFont>("Arcade");
+            _font = Content.Load<SpriteFont>("Arcade");
             _background = Content.Load<Texture2D>("background-purple");
+            _spaceStation = Content.Load<Song>("space_station");
+            _scrambeled = Content.Load<Texture2D>("ScrambledEggs");
         }
 
         protected override void Update(GameTime gameTime)
@@ -63,7 +75,7 @@ namespace EggQuest
             _inputManager.Update(gameTime);
             if (_inputManager.Exit) Exit();
 
-            if (_player.hp > 0)
+            if (_player.hp > 0 && _theEgg.hp > 0)
             {
                 Projectile toRemove = null;
                 foreach (Projectile p in _theEgg.Projectiles)
@@ -78,13 +90,22 @@ namespace EggQuest
                 {
                     _theEgg.Projectiles.Remove(toRemove);
                 }
-                /*
-                foreach(Projectile p in _player.projectiles)
+                
+                foreach(Projectile p in _player.Projectiles)
                 {
-                    do something here
+                    if (p.CollidesWith(_theEgg))
+                    {
+                        _theEgg.onhit();
+                        p.IsActive = false;
+                    }
                 }
-                */
-                _theEgg.Update(gameTime, _screenWidth, _screenHeight);
+                _player.Projectiles.RemoveAll(p => !p.IsActive);
+                if (MediaPlayer.State != MediaState.Playing)
+                {
+                    MediaPlayer.Play(_spaceStation);
+                }
+                if (_inputManager.SpacePressed) _player.SpawnProjectile();
+                _theEgg.Update(gameTime);
                 _player.InputDirection = _inputManager.Direction;
                 _player.Update(gameTime);
                 timer += gameTime.ElapsedGameTime.TotalSeconds;
@@ -114,6 +135,12 @@ namespace EggQuest
             }
             else if (_player.hp <= 0)
             {
+                MediaPlayer.Stop();
+                _spriteBatch.Draw(_scrambeled, new Rectangle(0, 0, _screenWidth, _screenHeight), Color.White);
+            }
+            else if(_player.hp <= 0)
+            { /// if you die it happens here
+                MediaPlayer.Stop();
                 GraphicsDevice.Clear(Color.Black);
                 string message = "You Lose";
                 Vector2 messageSize = _font.MeasureString(message);
@@ -131,8 +158,8 @@ namespace EggQuest
                 GraphicsDevice.DepthStencilState = DepthStencilState.Default;
                 _theEgg.Draw(gameTime, _spriteBatch);
                 _player.Draw(gameTime, _spriteBatch);
-                _spriteBatch.DrawString(_font, timer.ToString("F2"), new Vector2(50, 50), Color.White);
-                _spriteBatch.DrawString(_font, "HP " + _player.hp.ToString(), new Vector2(50, 20), Color.White);
+                _spriteBatch.DrawString(_font, timer.ToString("F0"), new Vector2(50, 100), Color.White);
+                //_spriteBatch.DrawString(_font, "HP " + _player.hp.ToString(), new Vector2(50, 20), Color.White);
             }
 
             _spriteBatch.End();

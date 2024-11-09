@@ -3,8 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using EggQuest.Collisions;
-using SharpDX.Direct3D9;
 using System.Windows.Forms;
+using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Reflection.Metadata;
 
@@ -26,6 +26,10 @@ namespace EggQuest
         /// Center of the egg for drawing
         /// </summary>
         public Vector2 Origin;
+        /// <summary>
+        /// sound for when egg gets hit
+        /// </summary>
+        public SoundEffect EggDamageSound;
 
         private GraphicsDevice _graphicsDevice;
 
@@ -52,6 +56,12 @@ namespace EggQuest
 
         public List<Projectile> Projectiles = new List<Projectile>();
 
+        public static int ScreenWidth;
+        public static int ScreenHeight;
+
+        HealthBar healthBar;
+
+        public Egg() : base(new BoundingOval())
         public Egg(GraphicsDevice graphicsDevice, Matrix view, Matrix projection) : base(new BoundingOval())
         {
             _graphicsDevice = graphicsDevice;
@@ -85,18 +95,23 @@ namespace EggQuest
             CreateEggMesh();
            
             hp = 10;
+            hp = 20; //change for whatever we want it to be in the future
+
+            healthBar = new HealthBar(HealthType.Egg, hp, new Vector2(ScreenWidth - hp * 32, 48));
         }
 
         public override void LoadContent(ContentManager content)
         {
             Texture = content.Load<Texture2D>("MissingTexture");
-            PTexture = content.Load<Texture2D>("MissingTexture");
-            Width = 50;
-            Height = 75;
+            PTexture = content.Load<Texture2D>("ShellFragment");
+            EggDamageSound = content.Load<SoundEffect>("EggHit");
+            Width = Texture.Width;
+            Height = Texture.Height;
             Origin = new Vector2(Width / 2, Height / 2); // Center of the egg
             Vector2 eggCenter = new Vector2(EggPosition.X + Width / 2, EggPosition.Y + Height / 2); //center of the egg for rotating stuff to make an oval
 
             Hitbox = new BoundingOval(eggCenter, Width / 2, Height / 2);
+            healthBar.LoadContent(content);
         }
 
 
@@ -212,12 +227,12 @@ namespace EggQuest
             }
             
             // makes the egg bounce like DVD logo
-            if (Position.X <= Width / 2 || Position.X + Width / 2 >= screenWidth)
+            if (Position.X <= Width / 2 || Position.X + Width / 2 >= ScreenWidth)
             {
                 Velocity.X *= -1;
             }
 
-            if (Position.Y <= Height / 2 || Position.Y + Height / 2 >= screenHeight)
+            if (Position.Y <= Height / 2 || Position.Y + Height / 2>= ScreenHeight)
             {
                 Velocity.Y *= -1;
             }
@@ -257,7 +272,7 @@ namespace EggQuest
 
             foreach (var direction in directions)
             {
-                Projectiles.Add(new Projectile(Position, direction * 5, PTexture, 1)); ///number can be increased for more speed
+                Projectiles.Add(new Projectile(Position, direction * 5, PTexture, 1, RandomHelper.NextFloat(0,MathHelper.TwoPi))); ///number can be increased for more speed
                 //the 1 at the end is the scale. since these are the boss p
             }
         }
@@ -273,6 +288,8 @@ namespace EggQuest
             {
                 projectile.Draw(gameTime, spriteBatch);
             }
+
+            healthBar.Draw(gameTime, spriteBatch);
         }
 
         /// <summary>
@@ -280,8 +297,10 @@ namespace EggQuest
         /// </summary>
         public void onhit()
         {
-            //hp goes down by 1. 
-            // the egg flashes red for a second
+            hp -= 1;
+            healthBar.Health -= 1;
+            EggDamageSound.Play();
+            // the egg flashes red for a second maybe.
         }
 
         public void DrawEgg(Matrix view, Matrix projection)

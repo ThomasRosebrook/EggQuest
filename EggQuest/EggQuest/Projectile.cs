@@ -18,7 +18,13 @@ namespace EggQuest
         /// </summary>
         public bool projectileType;
 
-        public Projectile(Vector2 startPosition, Vector2 velocity, Texture2D image, int scale) : base(new BoundingRectangle( startPosition.X - (image.Width * scale) / 2, startPosition.Y - (image.Height * scale) / 2, image.Width * scale, image.Height * scale))
+        public static int ScreenWidth;
+
+        public static int ScreenHeight;
+
+        float Angle = 0f;
+
+        public Projectile(Vector2 startPosition, Vector2 velocity, Texture2D image, int scale, float angle = 0f) : base(new BoundingRectangle( startPosition.X - (image.Width * scale) / 2, startPosition.Y - (image.Height * scale) / 2, image.Width * scale, image.Height * scale))
         {
             Scale = scale;
             Position = startPosition;
@@ -27,6 +33,7 @@ namespace EggQuest
             Texture = image;
             Width = image.Width * scale;
             Height = image.Height * scale;
+            Angle = angle;
 
             Origin = new Vector2(Texture.Width / 2 * Scale, Texture.Height / 2 * Scale);
         }
@@ -35,7 +42,7 @@ namespace EggQuest
         {
             Position += Velocity;
             Hitbox.SetPosition(Position);
-            if (Position.X < 0 - Width || Position.X > 1000 + Width || Position.Y < 0 - Height || Position.Y > 800 + Height)
+            if (Position.X < 0 - Width || Position.X > ScreenWidth + Width || Position.Y < 0 - Height || Position.Y > ScreenHeight + Height)
             {
                 IsActive = false;
             }
@@ -45,7 +52,7 @@ namespace EggQuest
         {
             if (IsActive)
             {
-                spriteBatch.Draw(Texture, Position, null, Color.White, 0f, Origin, Scale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(Texture, Position, null, Color.White, Angle, Origin, Scale, SpriteEffects.None, 0f);
             }
         }
     }
