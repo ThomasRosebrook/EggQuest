@@ -113,7 +113,7 @@ namespace EggQuest
             }
             else
             {
-                if (_inputManager.SpacePressed) ResetGame();
+                if (_inputManager.Retry) ResetGame();
             }
         }
 
@@ -129,14 +129,14 @@ namespace EggQuest
             if (_theEgg.hp <= 0)
             {/// if you beat the game it will be handled here
                 GraphicsDevice.Clear(Color.Black);
-                Vector2 messageSize = _font.MeasureString("You Won");
-                Vector2 position = new Vector2((_screenWidth - messageSize.X) / 2, (_screenHeight - messageSize.Y) / 2);
-                _spriteBatch.DrawString(_font, "You Won", position, Color.White);
-            }
-            else if (_player.hp <= 0)
-            {
                 MediaPlayer.Stop();
                 _spriteBatch.Draw(_scrambeled, new Rectangle(0, 0, _screenWidth, _screenHeight), Color.White);
+                Vector2 messageSize = _font.MeasureString("You Won");
+                Vector2 position = new Vector2((_screenWidth - messageSize.X) / 2, 10 + messageSize.Y);
+                _spriteBatch.DrawString(_font, "You Won", position, Color.Black);
+                messageSize = _font.MeasureString("Press R to Retry");
+                position = new Vector2((_screenWidth - messageSize.X) / 2, _screenHeight - messageSize.Y);
+                _spriteBatch.DrawString(_font, "Press R to Retry", position, Color.Black);
             }
             else if(_player.hp <= 0)
             { /// if you die it happens here
@@ -146,7 +146,7 @@ namespace EggQuest
                 Vector2 messageSize = _font.MeasureString(message);
                 Vector2 position = new Vector2((_screenWidth - messageSize.X) / 2, (_screenHeight - messageSize.Y) / 2);
                 _spriteBatch.DrawString(_font, message, position, Color.White);
-                message = "Press Space to Retry";
+                message = "Press R to Retry";
                 messageSize = _font.MeasureString(message);
                 position = new Vector2((_screenWidth - messageSize.X) / 2, (_screenHeight - messageSize.Y) / 2 + 50);
                 _spriteBatch.DrawString(_font, message, position, Color.White);
@@ -173,6 +173,7 @@ namespace EggQuest
             _theEgg = new Egg(GraphicsDevice, _view, _projection);
             _theEgg.LoadContent(Content);
             _player.LoadContent(Content);
+            timer = 0;
         }
     }
 }

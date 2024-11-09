@@ -61,13 +61,13 @@ namespace EggQuest
 
         HealthBar healthBar;
 
-        public Egg() : base(new BoundingOval())
+        //public Egg() : base(new BoundingOval())
         public Egg(GraphicsDevice graphicsDevice, Matrix view, Matrix projection) : base(new BoundingOval())
         {
             _graphicsDevice = graphicsDevice;
             Position = new Vector2(400, 200);  // Where the egg spawns
             EggPosition = new Vector3(-Position.X, Position.Y, -550); 
-            Velocity = new Vector2(-2, -2);    // Initial speed and direction of the egg
+            Velocity = new Vector2(-3, -3);    // Initial speed and direction of the egg
             timeSinceLastShot = 0;
             _projection = projection;
             _view = view;
@@ -86,16 +86,11 @@ namespace EggQuest
             _effect.DirectionalLight0.Enabled = true;  // Enable directional light
             _effect.DirectionalLight0.DiffuseColor = new Vector3(1f, 1f, 1f);  // White light (default)
             _effect.DirectionalLight0.Direction = new Vector3(0f, -1f, -1f);  // Light coming from above and in front
-            _effect.DirectionalLight0.SpecularColor = new Vector3(0.25f);  // Specular light (shininess)
-
-
-
-
+            _effect.DirectionalLight0.SpecularColor = new Vector3(0.25f);  // Specular light (shininess
 
             CreateEggMesh();
            
             hp = 10;
-            hp = 20; //change for whatever we want it to be in the future
 
             healthBar = new HealthBar(HealthType.Egg, hp, new Vector2(ScreenWidth - hp * 32, 48));
         }
@@ -175,19 +170,19 @@ namespace EggQuest
             _indices = indices.ToArray();
         }
 
-        public void Update(GameTime gameTime, int screenWidth, int screenHeight)
+        public override void Update(GameTime gameTime)
         {
 
-            Position += Velocity;
+            //Position += Velocity;
             EggPosition += EggVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            Hitbox.SetPosition(new Vector2(Position.X + Width / 2, Position.Y + Height / 2));
+            //Hitbox.SetPosition(new Vector2(Position.X + Width / 2, Position.Y + Height / 2));
 
 
             // Define the visible boundaries based on the screen width and height, assuming centered origin
-            float leftBound = -screenWidth / 2 + Width / 2;  // Left edge of screen
-            float rightBound = screenWidth / 2 - Width / 2;   // Right edge of screen
-            float topBound = -screenHeight / 2 + Height / 2;  // Top edge of screen
-            float bottomBound = screenHeight / 2 - Height / 2; // Bottom edge of screen
+            float leftBound = -ScreenWidth / 2 + Width / 2;  // Left edge of screen
+            float rightBound = ScreenWidth / 2 - Width / 2;   // Right edge of screen
+            float topBound = -ScreenHeight / 2 + Height / 2;  // Top edge of screen
+            float bottomBound = ScreenHeight / 2 - Height / 2; // Bottom edge of screen
 
             // A small tolerance value to help prevent jittering or getting stuck at boundaries
             const float boundaryBuffer = 1.0f;
@@ -227,12 +222,12 @@ namespace EggQuest
             }
             
             // makes the egg bounce like DVD logo
-            if (Position.X <= Width / 2 || Position.X + Width / 2 >= ScreenWidth)
+            //if (Position.X <= Width / 2 || Position.X + Width / 2 >= ScreenWidth)
             {
                 Velocity.X *= -1;
             }
 
-            if (Position.Y <= Height / 2 || Position.Y + Height / 2>= ScreenHeight)
+            //if (Position.Y <= Height / 2 || Position.Y + Height / 2>= ScreenHeight)
             {
                 Velocity.Y *= -1;
             }
@@ -243,6 +238,9 @@ namespace EggQuest
                 SpawnProjectiles();
                 timeSinceLastShot = 0;
             }
+
+            Position = new Vector2(EggPosition.X + ScreenWidth / 2, -EggPosition.Y + ScreenHeight / 2);
+            Hitbox.SetPosition(Position);
 
             foreach (var projectile in Projectiles)
             {
@@ -278,11 +276,13 @@ namespace EggQuest
         }
 
         // Draws the egg and projectiles
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
 
             //base.Draw(gameTime, spriteBatch);
             //DrawEgg(view, projection);
+
+            //spriteBatch.Draw(Texture, Hitbox.GetPosition(), null, Color.White);
 
             foreach (var projectile in Projectiles)
             {
